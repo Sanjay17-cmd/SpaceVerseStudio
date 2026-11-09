@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{448663C5-4F02-A840-47EE-6781AD2E55B1}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "SpaceVerseStudio",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
