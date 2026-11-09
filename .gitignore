@@ -12,3 +12,5 @@ Plugins/**/Intermediate/
 *.suo
 *_BuiltData.uasset
 Backup/
+
+*.slnx
