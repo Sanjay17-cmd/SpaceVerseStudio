@@ -2,13 +2,26 @@
 #include "SVSimulationSubsystem.h"
 
 void USVSimulationSubsystem::SetSimulationState(
-    const FSVSimulationState& NewState)
+    const FSVSimulationState& State)
 {
-    CurrentState = NewState;
-    OnStateUpdated.Broadcast(CurrentState);
+    if (State.EntityId.IsEmpty())
+    {
+        return;
+    }
+
+    EntStates.Add(State.EntityId, State);
+    OnStateUpdated.Broadcast(State);
 }
 
-FSVSimulationState USVSimulationSubsystem::GetSimulationState() const
+bool USVSimulationSubsystem::GetSimulationState(
+    const FString& Id,
+    FSVSimulationState& Out) const
 {
-    return CurrentState;
+    if (const FSVSimulationState* State = EntStates.Find(Id))
+    {
+        Out = *State;
+        return true;
+    }
+
+    return false;
 }

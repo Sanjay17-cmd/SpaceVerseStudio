@@ -11,6 +11,21 @@ struct FSVSimulationState
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite, Category = "Simulation")
+    FString EntityId;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Simulation")
+    FString ReferenceFrameId;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Simulation")
+    FString TimeScaleId;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Simulation")
+    FString PositionUnit;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Simulation")
+    FString VelocityUnit;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Simulation")
     FVector PositionKm = FVector::ZeroVector;
 
     UPROPERTY(BlueprintReadWrite, Category = "Simulation")
@@ -45,9 +60,9 @@ public:
     void SetSimulationState(const FSVSimulationState& NewState);
 
     UFUNCTION(BlueprintPure, Category = "Simulation")
-    FSVSimulationState GetSimulationState() const;
+    bool GetSimulationState(const FString& Id, FSVSimulationState& Out) const;
 
 private:
     UPROPERTY()
-    FSVSimulationState CurrentState;
+    TMap<FString, FSVSimulationState> EntStates;
 };

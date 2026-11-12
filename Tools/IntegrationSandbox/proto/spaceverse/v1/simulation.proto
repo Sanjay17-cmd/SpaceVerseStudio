@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package kepler.spaceverse.v1;
+
+// Versioned interchange contract for SpaceVerse simulation state snapshots.
+// This contract carries observations from the authoritative runtime to consumers.
+// It does NOT define or perform astrodynamics calculations.
+
+service SimulationTelemetryService {
+  // Streams immutable state snapshots. A request may filter entities and bound
+  // the number/rate of messages for deterministic local testing.
+  rpc StreamStateSnapshots(StreamStateRequest) returns (stream StateSnapshot);
+
+  // Returns the latest available snapshot for one entity in a run.
+  rpc GetLatestState(GetLatestStateRequest) returns (StateSnapshot);
+}
+
+enum TimeScale {
+  TIME_SCALE_UNSPECIFIED = 0;
+  TIME_SCALE_SIMULATION_ELAPSED = 1;
+  TIME_SCALE_UTC = 2;
+  TIME_SCALE_TAI = 3;
+  TIME_SCALE_TT = 4;
+  TIME_SCALE_TDB = 5;
+}
+
+enum ReferenceFrame {
+  REFERENCE_FRAME_UNSPECIFIED = 0;
+  REFERENCE_FRAME_ICRF = 1;
+  REFERENCE_FRAME_J2000 = 2;
+  REFERENCE_FRAME_ECEF = 3;
+  REFERENCE_FRAME_RTN = 4;
+  REFERENCE_FRAME_SPACECRAFT_BODY = 5;
+  REFERENCE_FRAME_SENSOR = 6;
+  REFERENCE_FRAME_CUSTOM = 100;
+}
+
+enum AxisConvention {
+  AXIS_CONVENTION_UNSPECIFIED = 0;
+  AXIS_RIGHT_HANDED_Z_UP = 1;
+  AXIS_RIGHT_HANDED_Y_UP = 2;
+  AXIS_LEFT_HANDED_Z_UP = 3;
+  AXIS_CUSTOM = 100;
+}
+
+enum LengthUnit {
+  LENGTH_UNIT_UNSPECIFIED = 0;
+  LENGTH_UNIT_METER = 1;
+  LENGTH_UNIT_KILOMETER = 2;
+}
+
+enum VelocityUnit {
+  VELOCITY_UNIT_UNSPECIFIED = 0;
+  VELOCITY_UNIT_METER_PER_SECOND = 1;
+  VELOCITY_UNIT_KILOMETER_PER_SECOND = 2;
+}
+
+enum AttitudeConvention {
+  ATTITUDE_CONVENTION_UNSPECIFIED = 0;
+  // Quaternion fields are always serialized x,y,z,w. This enum defines the
+  // direction of the represented rotation, not the component ordering.
+  ATTITUDE_BODY_TO_REFERENCE_FRAME_XYZW = 1;
+  ATTITUDE_REFERENCE_FRAME_TO_BODY_XYZW = 2;
+}
+
+message Vector3d {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message Quaterniond {
+  // Component order is fixed as x,y,z,w. Consumers must validate normalization.
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double w = 4;
+}
+
+message SimulationTime {
+  // Seconds elapsed from the run's declared start instant. For this field,
+  // TIME_SCALE_SIMULATION_ELAPSED is used and no civil epoch is implied.
+  double elapsed_seconds = 1;
+  TimeScale time_scale = 2;
+  // Optional Julian Date of the run epoch, expressed in time_scale. Only set
+  // when the producer has a well-defined absolute epoch.
+  optional double epoch_julian_date = 3;
+}
+
+message StreamStateRequest {
+  string run_id = 1;
+  repeated string entity_ids = 2;
+  // 0 means stream until the client cancels/disconnects.
+  uint32 max_updates = 3;
+  // Minimum 20 ms; maximum 60000 ms. Used only by the mock producer.
+  uint32 interval_ms = 4;
+  string client_name = 5;
+}
+
+message GetLatestStateRequest {
+  string run_id = 1;
+  string entity_id = 2;
+}
+
+message StateSnapshot {
+  // Semantic schema version. The package path is also versioned (v1).
+  string schema_version = 1;
+  string run_id = 2;
+  string entity_id = 3;
+  uint64 sequence_number = 4;
+  SimulationTime simulation_time = 5;
+  Vector3d position = 6;
+  Vector3d velocity = 7;
+  Quaterniond attitude = 8;
+  ReferenceFrame reference_frame = 9;
+  string custom_reference_frame = 10;
+  AxisConvention axis_convention = 11;
+  LengthUnit position_unit = 12;
+  VelocityUnit velocity_unit = 13;
+  AttitudeConvention attitude_convention = 14;
+  // Producer validity/quality flag for this snapshot. true means the producer
+  // considers the record usable; it does not imply flight qualification or
+  // scientifically validated trajectory accuracy.
+  bool is_valid = 15;
+  string producer_name = 16;
+  string producer_version = 17;
+}

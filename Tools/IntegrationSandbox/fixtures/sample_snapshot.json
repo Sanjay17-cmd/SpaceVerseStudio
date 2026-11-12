@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "spaceverse-local-mock-run-001",
+  "entityId": "terra-001",
+  "sequenceNumber": "0",
+  "simulationTime": {
+    "elapsedSeconds": 0.0,
+    "timeScale": "TIME_SCALE_SIMULATION_ELAPSED"
+  },
+  "position": { "x": 7000.0, "y": 0.0, "z": 0.0 },
+  "velocity": { "x": 0.0, "y": 7.546053290107541, "z": 0.0 },
+  "attitude": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+  "referenceFrame": "REFERENCE_FRAME_CUSTOM",
+  "customReferenceFrame": "SV_TEST_EARTH_CENTRED_INERTIAL_RH_Z_UP",
+  "axisConvention": "AXIS_RIGHT_HANDED_Z_UP",
+  "positionUnit": "LENGTH_UNIT_KILOMETER",
+  "velocityUnit": "VELOCITY_UNIT_KILOMETER_PER_SECOND",
+  "attitudeConvention": "ATTITUDE_BODY_TO_REFERENCE_FRAME_XYZW",
+  "isValid": true,
+  "producerName": "SpaceVerseIntegrationSandbox",
+  "producerVersion": "0.1.0"
+}

@@ -21,6 +21,7 @@ void ASVSimulationTestDriver::PublishTestTelemetry()
     if (!Simulation) return;
 
     FSVSimulationState State;
+    State.EntityId = TEXT("TestSpacecraft");
     State.PositionKm = FVector(7000.0 + Sequence, 0.0, 0.0);
     State.VelocityKmPerSec = FVector(0.0, 7.5, 0.0);
     State.SimulationTimeSeconds = Sequence;

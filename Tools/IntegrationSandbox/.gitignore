@@ -1,0 +1,11 @@
+# Python virtual environments and cache files
+python/.venv/
+python/**/__pycache__/
+python/**/*.pyc
+.pytest_cache/
+
+# Local editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
